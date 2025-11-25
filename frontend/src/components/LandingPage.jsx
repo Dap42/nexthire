@@ -143,10 +143,13 @@ const LandingPage = () => {
             </div>
           </motion.div>
         </div>
+        
+        {/* Smooth Gradient Transition */}
+        <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 border-y border-border/50 bg-muted/20">
+      <section className="py-20 border-y border-border/50 bg-muted/20 relative">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
