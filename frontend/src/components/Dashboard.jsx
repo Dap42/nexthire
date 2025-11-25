@@ -111,10 +111,10 @@ const Dashboard = () => {
       };
 
       if (currentCandidate) {
-        await axios.put(`${API}/candidates/${currentCandidate.id}`, payload);
+        await candidateService.updateCandidate(currentCandidate.id, payload);
         toast.success("Candidate updated successfully");
       } else {
-        await axios.post(`${API}/candidates`, payload);
+        await candidateService.createCandidate(payload);
         toast.success("Candidate added successfully");
       }
       
@@ -131,7 +131,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this candidate?")) {
       try {
-        await axios.delete(`${API}/candidates/${id}`);
+        await candidateService.deleteCandidate(id);
         toast.success("Candidate deleted");
         fetchCandidates();
       } catch (error) {
