@@ -261,11 +261,6 @@ const LandingPage = () => {
                 desc: "Hire from Bengaluru, Gurugram, Hyderabad, Pune, and beyond with localized compliance."
               },
               {
-                icon: <Shield className="h-8 w-8" />,
-                title: "Enterprise Security",
-                desc: "Bank-grade encryption and SOC2 compliance ensures your sensitive hiring data remains protected."
-              },
-              {
                 icon: <Zap className="h-8 w-8" />,
                 title: "Instant Matching",
                 desc: "Our proprietary algorithm matches candidates to your open roles in seconds, not days."
