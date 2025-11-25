@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Plus, Search, Filter, Trash2, Edit, X, Users, Briefcase, CheckCircle, XCircle, Zap, MapPin, IndianRupee } from 'lucide-react';
+import { Plus, Search, Filter, Trash2, Edit, X, Users, Briefcase, CheckCircle, XCircle, Zap, MapPin, IndianRupee, ExternalLink, GraduationCap, Award, Linkedin, Github, Globe, FileText, Calendar, CreditCard, Clock, Monitor, Languages, UserCheck, Building2 } from 'lucide-react';
 import { ModeToggle } from "@/components/mode-toggle";
 import { useNavigate } from 'react-router-dom';
 import * as candidateService from '@/services/candidateService';
@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [currentCandidate, setCurrentCandidate] = useState(null);
   
   // Filters
@@ -148,6 +149,11 @@ const Dashboard = () => {
       skills: candidate.skills.join(', ')
     });
     setIsEditOpen(true);
+  };
+
+  const openDetail = (candidate) => {
+    setCurrentCandidate(candidate);
+    setIsDetailOpen(true);
   };
 
   const resetForm = () => {
@@ -484,7 +490,12 @@ const Dashboard = () => {
                 </TableRow>
               ) : (
                 filteredCandidates.map((candidate) => (
-                  <TableRow key={candidate.id} className="group hover:bg-muted/50 transition-colors" data-testid={`row-${candidate.id}`}>
+                  <TableRow 
+                    key={candidate.id} 
+                    className="group hover:bg-muted/50 transition-colors cursor-pointer" 
+                    data-testid={`row-${candidate.id}`}
+                    onClick={() => openDetail(candidate)}
+                  >
                     <TableCell className="font-medium">
                       <div>{candidate.name}</div>
                       <div className="text-xs text-muted-foreground">{candidate.email}</div>
@@ -515,10 +526,10 @@ const Dashboard = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(candidate)} data-testid={`edit-${candidate.id}`}>
+                        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); openEdit(candidate); }} data-testid={`edit-${candidate.id}`}>
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(candidate.id)} data-testid={`delete-${candidate.id}`}>
+                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={(e) => { e.stopPropagation(); handleDelete(candidate.id); }} data-testid={`delete-${candidate.id}`}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -594,6 +605,286 @@ const Dashboard = () => {
               <Button type="submit">Update Candidate</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Candidate Detail Dialog */}
+      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+          {currentCandidate && (
+            <>
+              <DialogHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <DialogTitle className="text-2xl">{currentCandidate.name}</DialogTitle>
+                    <p className="text-muted-foreground mt-1">{currentCandidate.role}</p>
+                  </div>
+                  <Badge className={getStatusColor(currentCandidate.status)} variant="outline">
+                    {currentCandidate.status}
+                  </Badge>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-6 mt-4">
+                {/* Summary Section */}
+                {currentCandidate.summary && (
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <p className="text-sm leading-relaxed">{currentCandidate.summary}</p>
+                  </div>
+                )}
+
+                {/* Contact Information */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    Contact Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">Email:</span>
+                      <a href={`mailto:${currentCandidate.email}`} className="text-primary hover:underline">
+                        {currentCandidate.email}
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">Phone:</span>
+                      <a href={`tel:${currentCandidate.phone}`} className="text-primary hover:underline">
+                        {currentCandidate.phone}
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-muted-foreground">Location:</span>
+                      <span>{currentCandidate.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Calendar className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-muted-foreground">Applied:</span>
+                      <span>{new Date(currentCandidate.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                    </div>
+                    {currentCandidate.aadhaar && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <CreditCard className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-muted-foreground">Aadhaar:</span>
+                        <span className="font-mono">{currentCandidate.aadhaar}</span>
+                      </div>
+                    )}
+                    {currentCandidate.languages && currentCandidate.languages.length > 0 && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <Languages className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-muted-foreground">Languages:</span>
+                        <span>{currentCandidate.languages.join(', ')}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Employment Details */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {currentCandidate.current_ctc && (
+                    <div className="bg-card border border-border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <IndianRupee className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold">Current CTC</h3>
+                      </div>
+                      <p className="text-lg font-bold">{formatCurrency(currentCandidate.current_ctc)}</p>
+                    </div>
+                  )}
+                  {currentCandidate.notice_period && (
+                    <div className="bg-card border border-border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold">Notice Period</h3>
+                      </div>
+                      <p className="text-lg font-bold">{currentCandidate.notice_period}</p>
+                    </div>
+                  )}
+                  {currentCandidate.work_mode && (
+                    <div className="bg-card border border-border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Monitor className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold">Work Mode</h3>
+                      </div>
+                      <p className="text-lg font-bold">{currentCandidate.work_mode}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Professional Links */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Professional Links
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {currentCandidate.linkedin && (
+                      <a 
+                        href={currentCandidate.linkedin} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 transition-colors text-sm"
+                      >
+                        <Linkedin className="h-4 w-4" />
+                        LinkedIn
+                      </a>
+                    )}
+                    {currentCandidate.github && (
+                      <a 
+                        href={currentCandidate.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-gray-500/10 text-gray-500 dark:text-gray-400 rounded-lg hover:bg-gray-500/20 transition-colors text-sm"
+                      >
+                        <Github className="h-4 w-4" />
+                        GitHub
+                      </a>
+                    )}
+                    {currentCandidate.portfolio && (
+                      <a 
+                        href={currentCandidate.portfolio} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 text-purple-500 rounded-lg hover:bg-purple-500/20 transition-colors text-sm"
+                      >
+                        <Globe className="h-4 w-4" />
+                        Portfolio
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* Experience & Salary */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Briefcase className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-sm font-semibold">Experience</h3>
+                    </div>
+                    <p className="text-2xl font-bold">{currentCandidate.experience_years} years</p>
+                  </div>
+                  <div className="bg-card border border-border rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <IndianRupee className="h-4 w-4 text-muted-foreground" />
+                      <h3 className="text-sm font-semibold">Salary Expectation</h3>
+                    </div>
+                    <p className="text-lg font-bold">
+                      {formatCurrency(currentCandidate.salary_min)} - {formatCurrency(currentCandidate.salary_max)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                <div>
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    Skills & Expertise
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {currentCandidate.skills.map((skill, i) => (
+                      <Badge key={i} variant="secondary" className="font-normal">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Education */}
+                {currentCandidate.education && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4" />
+                      Education
+                    </h3>
+                    <p className="text-sm bg-muted/50 p-3 rounded-lg">{currentCandidate.education}</p>
+                  </div>
+                )}
+
+                {/* Certifications */}
+                {currentCandidate.certifications && currentCandidate.certifications.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Award className="h-4 w-4" />
+                      Certifications
+                    </h3>
+                    <ul className="space-y-2">
+                      {currentCandidate.certifications.map((cert, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm">
+                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span>{cert}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Work Experience */}
+                {currentCandidate.work_experience && currentCandidate.work_experience.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Building2 className="h-4 w-4" />
+                      Work Experience
+                    </h3>
+                    <div className="space-y-4">
+                      {currentCandidate.work_experience.map((exp, i) => (
+                        <div key={i} className="border-l-2 border-primary pl-4 pb-4 last:pb-0">
+                          <div className="flex items-start justify-between mb-1">
+                            <h4 className="font-semibold text-sm">{exp.role}</h4>
+                            <Badge variant="outline" className="text-xs">{exp.duration}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{exp.company}</p>
+                          <p className="text-sm leading-relaxed">{exp.responsibilities}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* References */}
+                {currentCandidate.references && currentCandidate.references.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <UserCheck className="h-4 w-4" />
+                      Professional References
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {currentCandidate.references.map((ref, i) => (
+                        <div key={i} className="bg-muted/50 p-3 rounded-lg">
+                          <p className="font-semibold text-sm">{ref.name}</p>
+                          <p className="text-xs text-muted-foreground mb-1">{ref.designation}</p>
+                          <a href={`tel:${ref.contact}`} className="text-xs text-primary hover:underline">
+                            {ref.contact}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Internal Notes */}
+                {currentCandidate.notes && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      Internal Notes
+                    </h3>
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-yellow-900 dark:text-yellow-100">{currentCandidate.notes}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <DialogFooter className="mt-6">
+                <Button variant="outline" onClick={() => setIsDetailOpen(false)}>
+                  Close
+                </Button>
+                <Button onClick={() => { setIsDetailOpen(false); openEdit(currentCandidate); }}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Candidate
+                </Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
