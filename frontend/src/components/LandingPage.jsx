@@ -130,7 +130,7 @@ const LandingPage = () => {
           {/* Floating UI Mockup */}
           <motion.div 
             style={{ y: y2, opacity }}
-            className="mt-20 relative mx-auto max-w-5xl"
+            className="mt-8 relative mx-auto max-w-5xl"
           >
             <div className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-md shadow-2xl overflow-hidden p-2">
               <div className="rounded-lg bg-background border border-border/50 overflow-hidden">
@@ -145,11 +145,11 @@ const LandingPage = () => {
         </div>
         
         {/* Smooth Gradient Transition */}
-        <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-b from-transparent via-background/70 to-background pointer-events-none" />
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 border-y border-border/50 bg-muted/20 relative">
+      <section className="py-12 border-y border-border/50 bg-muted/20 relative -mt-16">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
