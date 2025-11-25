@@ -149,7 +149,7 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 border-y border-border/50 bg-muted/20 relative -mt-16">
+      <section className="py-12 border-y border-border/50 bg-muted/20 relative -mt-50">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
