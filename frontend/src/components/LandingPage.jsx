@@ -12,7 +12,6 @@ const LandingPage = () => {
   // Parallax effects
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   const fadeIn = {
     initial: { opacity: 0, y: 30 },
@@ -129,7 +128,7 @@ const LandingPage = () => {
 
           {/* Floating UI Mockup */}
           <motion.div 
-            style={{ y: y2, opacity }}
+            style={{ y: y2 }}
             className="mt-8 relative mx-auto max-w-5xl"
           >
             <div className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-md shadow-2xl overflow-hidden p-2">
