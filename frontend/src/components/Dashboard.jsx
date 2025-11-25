@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { 
   Table, 
   TableBody, 
@@ -32,9 +31,7 @@ import { toast } from "sonner";
 import { Plus, Search, Filter, Trash2, Edit, X, Users, Briefcase, CheckCircle, XCircle, Zap, MapPin, IndianRupee } from 'lucide-react';
 import { ModeToggle } from "@/components/mode-toggle";
 import { useNavigate } from 'react-router-dom';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import * as candidateService from '@/services/candidateService';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -77,8 +74,8 @@ const Dashboard = () => {
   const fetchCandidates = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API}/candidates`);
-      setCandidates(response.data);
+      const data = await candidateService.getCandidates();
+      setCandidates(data);
     } catch (error) {
       console.error("Error fetching candidates:", error);
       toast.error("Failed to fetch candidates");
